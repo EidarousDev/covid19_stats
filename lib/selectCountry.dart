@@ -1,3 +1,4 @@
+import 'package:covid19stats/parser.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as dev;
 
@@ -431,7 +432,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           title: Row(
             children: <Widget>[
               Text(
-                filteredCountries[i] +
+                Parser.getArabicCountry(filteredCountries[i]) +
                     (countryFlags.containsKey(filteredCountries[i])
                         ? "  " + countryFlags[filteredCountries[i]]
                         : ""),
