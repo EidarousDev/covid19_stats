@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'إحصائيات فيروس كورونا',
-      theme: ThemeData(primarySwatch: Colors.red),
+      theme: ThemeData(primarySwatch: Colors.green),
       home: MyHomePage(),
     );
   }
@@ -94,10 +94,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Color(0xff232d37),
       appBar: AppBar(
+        backgroundColor: Color(0xff8dc63f),
         centerTitle: true,
         title: country != 'Global'
-      ? Text(" إحصائيات كورونا لدولة " + Parser.getArabicCountry(country))
-        : Text(" إحصائيات كورونا - " + Parser.getArabicCountry(country)),
+            ? Text(" إحصائيات كورونا لدولة " + Parser.getArabicCountry(country))
+            : Text(" إحصائيات كورونا - " + Parser.getArabicCountry(country)),
       ),
       body: LiquidPullToRefresh(
         springAnimationDurationInMilliseconds: springAnimationDuration,
@@ -290,12 +291,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       floatingActionButton: AnimatedOpacity(
         opacity: countryData.length > 1 ? 1.0 : 0.0,
         duration: Duration(milliseconds: 500),
-        child: FloatingActionButton(
+        child: FloatingActionButton.extended(
           onPressed: () {
             navigateToSelection(context);
           },
           tooltip: 'إختر دولة',
-          child: Icon(Icons.public),
+          label: Text(
+            'إختر دولة',
+            style: TextStyle(fontSize: 17.0),
+          ),
         ),
       ),
     );

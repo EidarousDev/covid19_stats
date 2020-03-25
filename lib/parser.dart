@@ -68,7 +68,7 @@ class Parser {
   }
 
   static var arabicCountries = {
-    'Global': 'عالميا',
+    'Global': 'عالمياً',
     'China': 'الصين',
     'Italy': 'إيطاليا',
     'USA': 'الولايات المتحدة الأمريكية',
@@ -272,9 +272,10 @@ class Parser {
     return arabicCountries[country] ?? country;
   }
 
-  static getArabicCountryKey(String arabicCountry){
+  static getArabicCountryKey(String arabicCountry) {
     return arabicCountries.keys.firstWhere(
-            (k) => arabicCountries[k] == arabicCountry, orElse: () => null);
+        (k) => arabicCountries[k] == arabicCountry,
+        orElse: () => null);
   }
 
   static List<String> getCategories(String s) {

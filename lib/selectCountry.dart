@@ -396,7 +396,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         enabled: searchFieldVisible,
                         controller: _controller,
                         decoration: new InputDecoration(
-                            hintText: 'Search', border: InputBorder.none),
+                            hintText: 'البحث عن دولة',
+                            border: InputBorder.none),
+                        textAlign: TextAlign.right,
                         onTap: () {
                           if (newSearch = true) newSearch = false;
                         },
