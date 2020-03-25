@@ -95,7 +95,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       backgroundColor: Color(0xff232d37),
       appBar: AppBar(
         centerTitle: true,
-        title: Text(country + " - إحصائيات كورونا"),
+        title: country != 'Global'
+      ? Text(" إحصائيات كورونا لدولة " + Parser.getArabicCountry(country))
+        : Text(" إحصائيات كورونا - " + Parser.getArabicCountry(country)),
       ),
       body: LiquidPullToRefresh(
         springAnimationDurationInMilliseconds: springAnimationDuration,

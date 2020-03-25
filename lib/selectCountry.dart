@@ -303,14 +303,19 @@ class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController _controller = new TextEditingController();
   FocusNode textFieldFocusNode;
   bool searchFieldVisible = false;
-  List filteredCountries;
+  List arabicCountries = [];
+  List filteredArabicCountries = [];
   bool newSearch = true;
 
   @override
   void initState() {
     super.initState();
 
-    filteredCountries = widget.countries;
+    for (String country in widget.countries) {
+      arabicCountries.add(Parser.getArabicCountry(country));
+    }
+
+    filteredArabicCountries = arabicCountries;
     textFieldFocusNode = new FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 50), () {
@@ -336,7 +341,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
   void toggleSearchField() {
     setState(() {
       searchFieldVisible = !searchFieldVisible;
-      filteredCountries = widget.countries;
+
+      filteredArabicCountries = [];
+
+      for (String country in widget.countries) {
+        filteredArabicCountries.add(Parser.getArabicCountry(country));
+      }
+
       newSearch = true;
       _controller.clear();
     });
@@ -359,7 +370,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 key: key,
                 controller: scrollController,
                 shrinkWrap: true,
-                itemCount: filteredCountries.length,
+                itemCount: filteredArabicCountries.length,
                 itemBuilder: (context, i) {
                   return getListTile(context, i,
                       firstInSearch: searchFieldVisible && i == 0,
@@ -392,10 +403,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         onChanged: (String value) {
                           setState(() {
                             newSearch = false;
-                            filteredCountries = widget.countries
-                                .where((s) => s
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
+
+                            filteredArabicCountries = arabicCountries
+                                .where((s) => s.contains(value))
                                 .toList();
                           });
                         },
@@ -417,7 +427,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
       {bool firstInSearch = false, bool animated = false}) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context, filteredCountries[i]);
+        Navigator.pop(
+            context, Parser.getArabicCountryKey(filteredArabicCountries[i]));
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: animated ? 250 : 0),
@@ -432,16 +443,19 @@ class _SelectionScreenState extends State<SelectionScreen> {
           title: Row(
             children: <Widget>[
               Text(
-                Parser.getArabicCountry(filteredCountries[i]) +
-                    (countryFlags.containsKey(filteredCountries[i])
-                        ? "  " + countryFlags[filteredCountries[i]]
+                filteredArabicCountries[i] +
+                    (countryFlags.containsKey(Parser.getArabicCountryKey(
+                            filteredArabicCountries[i]))
+                        ? "  " +
+                            countryFlags[Parser.getArabicCountryKey(
+                                filteredArabicCountries[i])]
                         : ""),
                 style: TextStyle(color: Colors.white, fontSize: 22),
               ),
               SizedBox(
                 width: 15,
               ),
-              filteredCountries[i] == "Global"
+              Parser.getArabicCountryKey(filteredArabicCountries[i]) == "Global"
                   ? Icon(
                       Icons.public,
                       color: Colors.white,
@@ -449,13 +463,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   : SizedBox(),
             ],
           ),
-          trailing: filteredCountries[i] == widget.selectedCountry
-              ? Icon(
-                  Icons.check,
-                  size: 30,
-                  color: Colors.white,
-                )
-              : null,
         ),
       ),
     );
