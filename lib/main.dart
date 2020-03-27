@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:covid19stats/selectCountry.dart';
 import 'package:covid19stats/parser.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -6,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math';
 
-void main() => runApp(MyApp());
+void main() {
+  Admob.initialize('com.eidarousdev.covid19');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
@@ -39,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   int springAnimationDuration = 750;
   AnimationController _controller;
+  AdmobInterstitial _admobInterstitial;
 
   @override
   initState() {
@@ -48,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
 
     chartsData["Global"] = Parser.getEmptyChart();
+    _admobInterstitial = createInterstitial();
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -165,7 +171,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ],
             ),
             chartsData[country] != null ? createGraph(1) : SizedBox(),
-            SizedBox(height: 30),
+            SizedBox(height: 15),
+            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -293,6 +300,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 500),
         child: FloatingActionButton.extended(
           onPressed: () {
+            _admobInterstitial.load();
             navigateToSelection(context);
           },
           tooltip: 'إختر دولة',
@@ -576,6 +584,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
       ],
     );
+  }
+
+  AdmobInterstitial createInterstitial() {
+    return AdmobInterstitial(
+        adUnitId: 'ca-app-pub-4995525564354450/3289022793',
+        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+          if (event == AdmobAdEvent.loaded) {
+            _admobInterstitial.show();
+          } else if (event == AdmobAdEvent.closed) {
+            _admobInterstitial.dispose();
+          }
+        });
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:covid19stats/parser.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as dev;
